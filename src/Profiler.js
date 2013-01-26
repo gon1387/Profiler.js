@@ -177,7 +177,7 @@
 		if(typeof reporter !== 'object'){
 			throw Error("Should pass a valid Profiler reporter object.");
 		}
-		reporter.show();
+		reporter.render();
 	};
 
 	Profiler.noConflict = function() {
@@ -219,10 +219,58 @@
 		})()
 	};
 	
+	Profiler.util = {
+		cloneData: function(data){
+			var clonedData={},
+				prop;
+			
+			for(prop in data){
+				if(this.type.isArray(data[prop]) && (clonedData[prop] = []) || this.type.isObject(data[prop]) && (clonedData[prop] = {})){
+					clonedData[prop] = this.cloneData(data[prop]);
+				} else {
+					if(data[prop] !== undefined && data[prop]!==null){
+						clonedData[prop] = data[prop];
+					}
+				}		
+			}
+			return clonedData;
+		},
+		
+		type: {
+			getType: function(obj){
+				return Object.prototype.toString.call(obj);
+			},
+			isArray: function(obj){
+				return (this.getType(obj) === '[object Array]');
+			},
+			isObject: function(obj){
+				return (this.getType(obj) === '[object Object]');
+			},
+			isFunction: function(obj){
+				return (this.getType(obj) === '[object Function]');
+			},
+			isDate: function(obj){
+				return (this.getType(obj) === '[object Date]');
+			},
+			isNumber: function(obj){
+				return (this.getType(obj) === '[object Number]');
+			},
+			isString: function(obj){
+				return (this.getType(obj) === '[object String]');
+			},
+			isBoolean: function(obj){
+				return (this.getType(obj) === '[object Boolean]');
+			},
+			isNull: function(obj){
+				return (this.getType(obj) === '[object Null]');
+			}
+		}
+	};
+	
 	Profiler.ver = {
 		major: "0",
 		minor: "1",
-		build: "0"
+		build: "1"
 	};
 
 	window.Profiler = window.__ = Profiler;
