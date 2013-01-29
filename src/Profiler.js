@@ -17,7 +17,7 @@
 	Profile.data = function() {
 		return {
 			status: null,
-			runCount: 0,
+			cycleCount: 0,
 			cycles: {}
 		};
 	};
@@ -44,10 +44,10 @@
 		}
 
 		_profiles[name].status = Profiler.STARTED;
-		_profiles[name].cycles[_profiles[name].runCount] = new Profile.cycle();
-		_profiles[name].cycles[_profiles[name].runCount].track = new Time.period();
-		_profiles[name].cycles[_profiles[name].runCount].track.start = now;
-		_profiles[name].runCount++;
+		_profiles[name].cycles[_profiles[name].cycleCount] = new Profile.cycle();
+		_profiles[name].cycles[_profiles[name].cycleCount].track = new Time.period();
+		_profiles[name].cycles[_profiles[name].cycleCount].track.start = now;
+		_profiles[name].cycleCount++;
 		console.log(_profiles[name]);
 
 		return now;
@@ -63,7 +63,7 @@
 		}
 
 		_profiles[name].status = Profiler.STOPPED;
-		_profiles[name].cycles[_profiles[name].runCount - 1].track.end = now;
+		_profiles[name].cycles[_profiles[name].cycleCount - 1].track.end = now;
 		return now;
 
 	};
@@ -80,7 +80,7 @@
 
 		period = new Time.period();
 		period.start = now;
-		_profiles[name].cycles[_profiles[name].runCount - 1].lapse.push(period);
+		_profiles[name].cycles[_profiles[name].cycleCount - 1].lapse.push(period);
 		_profiles[name].status = Profiler.PAUSED;
 		return now;
 	};
@@ -95,9 +95,9 @@
 			throw Error("Resumming a running profile named " + name);
 		}
 
-		period = _profiles[name].cycles[_profiles[name].runCount - 1].lapse.pop();
+		period = _profiles[name].cycles[_profiles[name].cycleCount - 1].lapse.pop();
 		period.end = now;
-		_profiles[name].cycles[_profiles[name].runCount - 1].lapse.push(period);
+		_profiles[name].cycles[_profiles[name].cycleCount - 1].lapse.push(period);
 		_profiles[name].status = Profiler.RESUMED;
 		return now;
 	};
