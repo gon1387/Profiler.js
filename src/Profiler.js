@@ -146,11 +146,11 @@
 		var i;
 		var profiles = {};
 		
-		//check if the argument a string or array
-		if ( typeof name !== "string" || name instanceof Array) {
-			throw new TypeError("getProfileData method accepts String names of profile/s in array or a single string");
-		}
 		if (name) {
+			//check if the argument a string or array
+			if ( typeof name !== "string" || name instanceof Array) {
+				throw new TypeError("getProfileData method accepts String names of profile/s in array or a single string");
+			}
 			//Get single profile
 			if ( typeof name === "string") {
 				if (!_profiles[name]) {
@@ -174,8 +174,8 @@
 	};
 	
 	Profiler.report = function(reporter){
-		if(typeof reporter !== 'object'){
-			throw Error("Should pass a valid Profiler reporter object.");
+		if(typeof reporter !== 'object' && !reporter.render){
+			throw Error("Should pass a valid Profiler reporter object with a method render.");
 		}
 		reporter.render();
 	};
